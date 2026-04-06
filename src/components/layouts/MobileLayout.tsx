@@ -25,6 +25,7 @@ const parentNav: NavItem[] = [
 
 export default function MobileLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { role } = useAuth();
   const nav = role === "parent" ? parentNav : studentNav;
 
@@ -38,10 +39,9 @@ export default function MobileLayout() {
           {nav.map((item) => {
             const active = location.pathname === item.path;
             return (
-              <a
+              <button
                 key={item.path}
-                href={item.path}
-                onClick={(e) => { e.preventDefault(); window.history.pushState({}, "", item.path); window.dispatchEvent(new PopStateEvent("popstate")); }}
+                onClick={() => navigate(item.path)}
                 className={cn(
                   "flex flex-col items-center gap-1 text-xs transition-colors py-2 px-3 rounded-lg",
                   active ? "text-primary font-semibold" : "text-muted-foreground"
@@ -49,7 +49,7 @@ export default function MobileLayout() {
               >
                 <item.icon className={cn("h-5 w-5", active && "text-primary")} />
                 {item.label}
-              </a>
+              </button>
             );
           })}
         </div>
