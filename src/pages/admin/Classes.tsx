@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, BookOpen, Clock, Calendar } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Class = Tables<"classes">;
@@ -42,56 +42,84 @@ export default function AdminClasses() {
   };
 
   const handleDelete = async (id: string) => {
+    if(!confirm("Hapus kelas ini?")) return;
     await supabase.from("classes").delete().eq("id", id);
     toast({ title: "Kelas berhasil dihapus" });
     fetchClasses();
   };
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Kelola Kelas</h1>
+    <div className="animate-in fade-in duration-500 pb-10">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+        <div>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+              <BookOpen className="h-5 w-5 text-emerald-600" />
+            </div>
+            Manajemen Kelas
+          </h1>
+          <p className="text-muted-foreground mt-1 text-sm font-medium pl-12 text-balance">Atur jadwal, mata pelajaran, dan waktu belajar siswa.</p>
+        </div>
+        
         <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) { setEditing(null); setForm({ name: "", subject: "", day_of_week: "", start_time: "", end_time: "" }); } }}>
-          <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />Tambah Kelas</Button></DialogTrigger>
-          <DialogContent>
-            <DialogHeader><DialogTitle>{editing ? "Edit Kelas" : "Tambah Kelas Baru"}</DialogTitle></DialogHeader>
-            <div className="space-y-4">
-              <div><Label>Nama Kelas</Label><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
-              <div><Label>Mata Pelajaran</Label><Input value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} /></div>
-              <div><Label>Hari</Label><Input value={form.day_of_week} onChange={(e) => setForm({ ...form, day_of_week: e.target.value })} placeholder="Senin" /></div>
+          <DialogTrigger asChild>
+            <Button className="bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-500/20 text-white rounded-full px-6">
+              <Plus className="mr-2 h-4 w-4" />Tambah Kelas
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-md glass-card border-0">
+            <DialogHeader>
+              <DialogTitle className="text-xl">{editing ? "Edit Data Kelas" : "Tambah Kelas Baru"}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-5 mt-2">
+              <div className="space-y-2"><Label className="text-xs uppercase font-bold text-muted-foreground">Nama Ruang/Kelas</Label><Input className="h-12 bg-background/50 border-white/10" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Cth: Kelas 10 MIPA 1" /></div>
+              <div className="space-y-2"><Label className="text-xs uppercase font-bold text-muted-foreground">Mata Pelajaran</Label><Input className="h-12 bg-background/50 border-white/10" value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} placeholder="Cth: Matematika Dasar" /></div>
+              <div className="space-y-2"><Label className="text-xs uppercase font-bold text-muted-foreground">Hari Rutin</Label><Input className="h-12 bg-background/50 border-white/10" value={form.day_of_week} onChange={(e) => setForm({ ...form, day_of_week: e.target.value })} placeholder="Cth: Senin" /></div>
               <div className="grid grid-cols-2 gap-4">
-                <div><Label>Jam Mulai</Label><Input type="time" value={form.start_time} onChange={(e) => setForm({ ...form, start_time: e.target.value })} /></div>
-                <div><Label>Jam Selesai</Label><Input type="time" value={form.end_time} onChange={(e) => setForm({ ...form, end_time: e.target.value })} /></div>
+                <div className="space-y-2"><Label className="text-xs uppercase font-bold text-muted-foreground">Jam Mulai</Label><Input className="h-12 bg-background/50" type="time" value={form.start_time} onChange={(e) => setForm({ ...form, start_time: e.target.value })} /></div>
+                <div className="space-y-2"><Label className="text-xs uppercase font-bold text-muted-foreground">Jam Selesai</Label><Input className="h-12 bg-background/50" type="time" value={form.end_time} onChange={(e) => setForm({ ...form, end_time: e.target.value })} /></div>
               </div>
-              <Button onClick={handleSave} className="w-full">{editing ? "Simpan" : "Tambah"}</Button>
+              <Button onClick={handleSave} className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 pt-1 mt-4 text-base font-bold shadow-lg shadow-emerald-500/20">{editing ? "Simpan Perubahan" : "Buat Kelas Baru"}</Button>
             </div>
           </DialogContent>
         </Dialog>
       </div>
-      <Card>
+
+      <Card className="glass-card border-0 shadow-lg overflow-hidden">
         <CardContent className="p-0">
           <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nama</TableHead>
-                <TableHead>Mapel</TableHead>
-                <TableHead>Hari</TableHead>
-                <TableHead>Jam</TableHead>
-                <TableHead className="text-right">Aksi</TableHead>
+            <TableHeader className="bg-emerald-500/5">
+              <TableRow className="border-b-emerald-500/10">
+                <TableHead className="font-bold text-emerald-900/50 dark:text-emerald-100/50">Nama Kelas</TableHead>
+                <TableHead className="font-bold text-emerald-900/50 dark:text-emerald-100/50">Mata Pelajaran</TableHead>
+                <TableHead className="font-bold text-emerald-900/50 dark:text-emerald-100/50">Jadwal Hari</TableHead>
+                <TableHead className="font-bold text-emerald-900/50 dark:text-emerald-100/50">Waktu (Jam)</TableHead>
+                <TableHead className="text-right font-bold text-emerald-900/50 dark:text-emerald-100/50 pr-6">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {classes.length === 0 ? (
-                <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-8">Belum ada kelas</TableCell></TableRow>
+                <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-16">Belum ada kelas yang terdaftar</TableCell></TableRow>
               ) : classes.map((c) => (
-                <TableRow key={c.id}>
-                  <TableCell className="font-medium">{c.name}</TableCell>
-                  <TableCell>{c.subject}</TableCell>
-                  <TableCell>{c.day_of_week || "-"}</TableCell>
-                  <TableCell>{c.start_time && c.end_time ? `${c.start_time.slice(0,5)} - ${c.end_time.slice(0,5)}` : "-"}</TableCell>
-                  <TableCell className="text-right space-x-2">
-                    <Button variant="ghost" size="icon" onClick={() => { setEditing(c); setForm({ name: c.name, subject: c.subject, day_of_week: c.day_of_week || "", start_time: c.start_time || "", end_time: c.end_time || "" }); setOpen(true); }}><Pencil className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleDelete(c.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                <TableRow key={c.id} className="border-b-white/5 hover:bg-emerald-500/5">
+                  <TableCell className="font-bold text-base py-4">{c.name}</TableCell>
+                  <TableCell className="font-medium text-muted-foreground">{c.subject}</TableCell>
+                  <TableCell>
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary text-xs font-semibold">
+                      <Calendar className="w-3 h-3" /> {c.day_of_week || "-"}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {c.start_time && c.end_time ? (
+                       <div className="inline-flex items-center gap-1.5 font-medium text-sm text-emerald-600 bg-emerald-500/10 px-2 py-1 rounded-md">
+                         <Clock className="w-3.5 h-3.5" />
+                         {`${c.start_time.slice(0,5)} - ${c.end_time.slice(0,5)}`}
+                       </div>
+                    ) : "-"}
+                  </TableCell>
+                  <TableCell className="text-right space-x-2 pr-6">
+                    <Button variant="ghost" size="icon" className="hover:bg-primary/20 hover:text-primary rounded-full transition-colors" onClick={() => { setEditing(c); setForm({ name: c.name, subject: c.subject, day_of_week: c.day_of_week || "", start_time: c.start_time || "", end_time: c.end_time || "" }); setOpen(true); }}><Pencil className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="icon" className="hover:bg-destructive/20 hover:text-destructive rounded-full transition-colors" onClick={() => handleDelete(c.id)}><Trash2 className="h-4 w-4" /></Button>
                   </TableCell>
                 </TableRow>
               ))}

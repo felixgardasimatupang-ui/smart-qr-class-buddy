@@ -18,7 +18,7 @@ const AuthContext = createContext<AuthContextType>({
   session: null,
   role: null,
   loading: true,
-  signOut: async () => {},
+  signOut: async () => { },
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -30,17 +30,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   const fetchRole = async (userId: string) => {
-    const { data } = await supabase.rpc("get_user_role", { _user_id: userId });
-    setRole(data as AppRole | null);
+    try {
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise<null>(resolve => setTimeout(() => resolve(null), 5000));
+      const rolePromise = supabase.rpc("get_user_role", { _user_id: userId });
+
+      const result = await Promise.race([rolePromise, timeoutPromise]);
+
+      if (result === null) {
+        console.warn("Role fetch timed out");
+        setRole(null);
+        return;
+      }
+
+      const { data, error } = result;
+      if (error) {
+        console.error("Error fetching role:", error);
+        setRole(null);
+      } else {
+        setRole(data as AppRole | null);
+      }
+    } catch (err) {
+      console.error("Exception fetching role:", err);
+      setRole(null);
+    }
   };
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
-          setTimeout(() => fetchRole(session.user.id), 0);
+          // Don't await - let it happen in background
+          fetchRole(session.user.id);
         } else {
           setRole(null);
         }

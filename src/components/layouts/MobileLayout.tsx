@@ -30,25 +30,37 @@ export default function MobileLayout() {
   const nav = role === "parent" ? parentNav : studentNav;
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <main className="flex-1 pb-20 overflow-auto">
+    <div className="min-h-screen flex flex-col bg-background relative selection:bg-primary/30">
+      <main className="flex-1 pb-24 overflow-auto">
         <Outlet />
       </main>
-      <nav className="fixed bottom-0 left-0 right-0 bg-card border-t z-50">
-        <div className="flex justify-around items-center h-16 max-w-lg mx-auto">
+      
+      {/* Floating Modern Navigation Bar */}
+      <nav className="fixed bottom-4 left-4 right-4 z-50 pointer-events-none">
+        <div className="flex justify-around items-center h-[72px] max-w-sm mx-auto glass rounded-3xl shadow-2xl pointer-events-auto px-2">
           {nav.map((item) => {
             const active = location.pathname === item.path;
             return (
               <button
                 key={item.path}
                 onClick={() => navigate(item.path)}
-                className={cn(
-                  "flex flex-col items-center gap-1 text-xs transition-colors py-2 px-3 rounded-lg",
-                  active ? "text-primary font-semibold" : "text-muted-foreground"
-                )}
+                className="relative flex flex-col items-center justify-center gap-1 w-16 h-full transition-all duration-300"
               >
-                <item.icon className={cn("h-5 w-5", active && "text-primary")} />
-                {item.label}
+                {active && (
+                  <div className="absolute top-0 w-8 h-1 bg-primary rounded-b-full shadow-[0_0_8px_rgba(100,100,255,0.8)]"></div>
+                )}
+                <div className={cn(
+                  "p-2 rounded-2xl transition-all duration-300",
+                  active ? "bg-primary/10 text-primary scale-110" : "text-muted-foreground hover:bg-muted"
+                )}>
+                  <item.icon className={cn("h-6 w-6 stroke-[2.5px]")} />
+                </div>
+                <span className={cn(
+                  "text-[10px] transition-all duration-300",
+                  active ? "font-bold text-primary opacity-100" : "font-semibold text-muted-foreground opacity-70"
+                )}>
+                  {item.label}
+                </span>
               </button>
             );
           })}

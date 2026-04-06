@@ -11,6 +11,7 @@ import Auth from "@/pages/Auth";
 import NotFound from "./pages/NotFound.tsx";
 
 import AdminDashboard from "@/pages/admin/Dashboard";
+import AdminUsers from "@/pages/admin/Users";
 import AdminStudents from "@/pages/admin/Students";
 import AdminClasses from "@/pages/admin/Classes";
 import AdminSessions from "@/pages/admin/Sessions";
@@ -41,11 +42,13 @@ const App = () => (
 
             <Route path="/admin" element={<ProtectedRoute allowedRoles={["admin"]}><AdminLayout /></ProtectedRoute>}>
               <Route index element={<AdminDashboard />} />
+              <Route path="users" element={<AdminUsers />} />
               <Route path="students" element={<AdminStudents />} />
               <Route path="classes" element={<AdminClasses />} />
               <Route path="sessions" element={<AdminSessions />} />
               <Route path="evaluations" element={<AdminEvaluations />} />
               <Route path="reports" element={<AdminReports />} />
+              <Route path="profile" element={<ProfilePage />} />
             </Route>
 
             <Route path="/student" element={<ProtectedRoute allowedRoles={["student"]}><MobileLayout /></ProtectedRoute>}>
