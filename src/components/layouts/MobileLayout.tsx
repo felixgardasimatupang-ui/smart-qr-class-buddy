@@ -57,7 +57,7 @@ export default function MobileLayout() {
                 </div>
                 <span className={cn(
                   "text-[10px] transition-all duration-300",
-                  active ? "font-bold text-primary opacity-100" : "font-semibold text-muted-foreground opacity-70"
+                  active ? "font-extrabold text-primary opacity-100 glow-text scale-110" : "font-semibold text-muted-foreground opacity-70"
                 )}>
                   {item.label}
                 </span>

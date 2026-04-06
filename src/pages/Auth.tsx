@@ -62,7 +62,7 @@ export default function Auth() {
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       {/* Animated Background Elements */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/20 blur-[100px] animate-pulse-slow"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-purple-500/20 blur-[100px] animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-cyan-500/20 blur-[100px] animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
 
       <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center z-10">
         
@@ -73,7 +73,7 @@ export default function Auth() {
             <span className="font-medium text-sm">Platform Absensi Masa Kini</span>
           </div>
           <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight">
-            Selamat Datang di <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">BimbelAbsen</span>
+            Selamat Datang di <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-500">BimbelAbsen</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-md leading-relaxed">
             Sistem informasi cerdas untuk memantau kehadiran, nilai, dan perkembangan anak Anda dengan mudah dan aman.
@@ -92,7 +92,7 @@ export default function Auth() {
 
         {/* Right Side: Auth Form */}
         <Card className="glass-card w-full max-w-md mx-auto border-0 sm:border relative overflow-hidden shadow-2xl">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-purple-600"></div>
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-cyan-500"></div>
           <CardHeader className="text-center sm:text-left space-y-3 pb-6">
             <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto sm:mx-0 mb-2">
               <BookOpen className="w-6 h-6 text-primary" />

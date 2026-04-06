@@ -33,7 +33,7 @@ export default function AdminDashboard() {
   }, []);
 
   const metricCards = [
-    { title: "Total User", value: stats.users, icon: UserCog, color: "from-purple-500/20 to-purple-500/0 text-purple-600", bgIcon: "bg-purple-100 dark:bg-purple-500/20", link: "/admin/users" },
+    { title: "Total User", value: stats.users, icon: UserCog, color: "from-cyan-500/20 to-cyan-500/0 text-cyan-600", bgIcon: "bg-cyan-100 dark:bg-cyan-500/20", link: "/admin/users" },
     { title: "Total Siswa", value: stats.students, icon: Users, color: "from-blue-500/20 to-blue-500/0 text-blue-600", bgIcon: "bg-blue-100 dark:bg-blue-500/20", link: "/admin/students" },
     { title: "Kelas", value: stats.classes, icon: BookOpen, color: "from-emerald-500/20 to-emerald-500/0 text-emerald-600", bgIcon: "bg-emerald-100 dark:bg-emerald-500/20", link: "/admin/classes" },
     { title: "Sesi Aktif", value: stats.sessions, icon: CalendarCheck, color: "from-amber-500/20 to-amber-500/0 text-amber-600", bgIcon: "bg-amber-100 dark:bg-amber-500/20", link: "/admin/sessions" },
@@ -41,7 +41,7 @@ export default function AdminDashboard() {
   ];
 
   const quickActions = [
-    { title: "Tambah User Baru", desc: "Daftarkan admin, guru, atau wali murid", icon: UserCog, action: () => navigate("/admin/users"), gradient: "from-purple-500 to-indigo-500" },
+    { title: "Tambah User Baru", desc: "Daftarkan admin, guru, atau wali murid", icon: UserCog, action: () => navigate("/admin/users"), gradient: "from-cyan-500 to-blue-600" },
     { title: "Tambah Siswa", desc: "Input data siswa baru ke dalam sistem", icon: Users, action: () => navigate("/admin/students"), gradient: "from-blue-500 to-cyan-500" },
     { title: "Tambah Kelas", desc: "Buat mata pelajaran dan jadwal baru", icon: BookOpen, action: () => navigate("/admin/classes"), gradient: "from-emerald-500 to-teal-500" },
     { title: "Buat Sesi Absensi", desc: "Mulai sesi QR absen untuk siswa", icon: CalendarCheck, action: () => navigate("/admin/sessions"), gradient: "from-amber-500 to-orange-500" },

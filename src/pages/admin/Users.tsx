@@ -66,7 +66,7 @@ export default function AdminUsers() {
 
     const roleBadge = (role: string) => {
         const map: Record<string, { label: string; className: string }> = {
-            admin: { label: "Administrator", className: "bg-purple-500/10 text-purple-600 border-purple-500/20 font-bold" },
+            admin: { label: "Administrator", className: "bg-cyan-500/10 text-cyan-600 border-cyan-500/20 font-bold" },
             student: { label: "Siswa Aktif", className: "bg-blue-500/10 text-blue-600 border-blue-500/20 font-bold" },
             parent: { label: "Orang Tua Wali", className: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-bold" },
         };
@@ -79,8 +79,8 @@ export default function AdminUsers() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
                 <div>
                     <h1 className="text-2xl font-bold flex items-center gap-2">
-                        <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">
-                            <UserCog className="h-5 w-5 text-purple-600" />
+                        <div className="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center">
+                            <UserCog className="h-5 w-5 text-cyan-600" />
                         </div>
                         Kelola Autentikasi Pengguna
                     </h1>
@@ -124,14 +124,14 @@ export default function AdminUsers() {
                                         </SelectContent>
                                     </Select>
                                 </div>
-                                <Button onClick={() => { if (selectedUser) handleUpdateRole(selectedUser.id, newUserRole); }} className="w-full h-12 bg-purple-600 hover:bg-purple-700 pt-1 mt-4 text-base font-bold shadow-lg shadow-purple-500/20">
+                                <Button onClick={() => { if (selectedUser) handleUpdateRole(selectedUser.id, newUserRole); }} className="w-full h-12 bg-cyan-600 hover:bg-cyan-700 pt-1 mt-4 text-base font-bold shadow-lg shadow-cyan-500/20">
                                     Berikan Hak Akses
                                 </Button>
                             </div>
                         </DialogContent>
                     </Dialog>
 
-                    <Button className="bg-purple-600 hover:bg-purple-700 shadow-lg shadow-purple-500/20 text-white rounded-full flex-1 sm:flex-none" onClick={() => window.open('/auth', '_blank')}>
+                    <Button className="bg-cyan-600 hover:bg-cyan-700 shadow-lg shadow-cyan-500/20 text-white rounded-full flex-1 sm:flex-none" onClick={() => window.open('/auth', '_blank')}>
                         <UserPlus className="mr-2 h-4 w-4" /> Daftarkan di Port
                     </Button>
                 </div>
@@ -140,13 +140,13 @@ export default function AdminUsers() {
             <Card className="glass-card border-0 shadow-lg overflow-hidden">
                 <CardContent className="p-0">
                     <Table>
-                        <TableHeader className="bg-purple-500/5">
-                            <TableRow className="border-b-purple-500/10">
-                                <TableHead className="font-bold text-purple-900/50 dark:text-purple-100/50">Profil / Nama Akun</TableHead>
-                                <TableHead className="font-bold text-purple-900/50 dark:text-purple-100/50">Kredensial Login</TableHead>
-                                <TableHead className="font-bold text-purple-900/50 dark:text-purple-100/50">Hak Sistem / Role</TableHead>
-                                <TableHead className="font-bold text-purple-900/50 dark:text-purple-100/50">Tanggal Daftar</TableHead>
-                                <TableHead className="text-right font-bold text-purple-900/50 dark:text-purple-100/50 pr-6">Alat</TableHead>
+                        <TableHeader className="bg-cyan-500/5">
+                            <TableRow className="border-b-cyan-500/10">
+                                <TableHead className="font-bold text-cyan-900/50 dark:text-cyan-100/50">Profil / Nama Akun</TableHead>
+                                <TableHead className="font-bold text-cyan-900/50 dark:text-cyan-100/50">Kredensial Login</TableHead>
+                                <TableHead className="font-bold text-cyan-900/50 dark:text-cyan-100/50">Hak Sistem / Role</TableHead>
+                                <TableHead className="font-bold text-cyan-900/50 dark:text-cyan-100/50">Tanggal Daftar</TableHead>
+                                <TableHead className="text-right font-bold text-cyan-900/50 dark:text-cyan-100/50 pr-6">Alat</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -156,7 +156,7 @@ export default function AdminUsers() {
                                 </TableRow>
                             ) : (
                                 users.map((user) => (
-                                    <TableRow key={user.id} className="border-b-white/5 hover:bg-purple-500/5">
+                                    <TableRow key={user.id} className="border-b-white/5 hover:bg-cyan-500/5">
                                         <TableCell className="font-bold text-base py-4">{user.full_name || "-"}</TableCell>
                                         <TableCell className="font-medium text-muted-foreground">{user.email || "-"}</TableCell>
                                         <TableCell>{roleBadge(user.role)}</TableCell>
