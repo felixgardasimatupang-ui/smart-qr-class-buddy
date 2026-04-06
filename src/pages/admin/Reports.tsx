@@ -6,12 +6,32 @@ import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 
+import { Download, FileDown, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
 export default function AdminReports() {
   const [students, setStudents] = useState<any[]>([]);
   const [selectedStudent, setSelectedStudent] = useState("");
   const [attendanceData, setAttendanceData] = useState<any[]>([]);
   const [evalData, setEvalData] = useState<any[]>([]);
   const [summary, setSummary] = useState({ hadir: 0, absen: 0, izin: 0, total: 0 });
+
+  const handleExport = () => {
+    if (!attendanceData.length) return;
+    const studentName = students.find(s => s.id === selectedStudent)?.full_name || "Laporan";
+    const headers = ["Tanggal", "Kelas", "Status\n"];
+    const rows = attendanceData.map(a => 
+      `${a.sessions?.date},${a.sessions?.classes?.name || "-"},${a.status}`
+    );
+    const csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + rows.join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `Laporan_${studentName.replace(/\s+/g, "_")}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   useEffect(() => {
     supabase.from("students").select("*").order("full_name").then(({ data }) => { if (data) setStudents(data); });
@@ -50,12 +70,26 @@ export default function AdminReports() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Laporan</h1>
-      <div className="mb-6 max-w-md">
-        <Label>Pilih Siswa</Label>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <div className="flex items-center gap-2 text-xs font-bold text-primary uppercase tracking-widest mb-1">
+            <Sparkles className="w-3 h-3" />
+            Statistik Kehadiran
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight">Laporan Siswa</h1>
+        </div>
+        {selectedStudent && attendanceData.length > 0 && (
+          <Button onClick={handleExport} variant="outline" className="glass-card shadow-sm rounded-full gap-2 text-xs font-bold">
+            <FileDown className="w-4 h-4" /> Download CSV (Excel)
+          </Button>
+        )}
+      </div>
+
+      <div className="mb-8 max-w-md p-6 glass-card rounded-2xl border-0">
+        <Label className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest mb-2 block">Pilih Nama Siswa</Label>
         <Select value={selectedStudent} onValueChange={setSelectedStudent}>
-          <SelectTrigger><SelectValue placeholder="Pilih siswa" /></SelectTrigger>
-          <SelectContent>{students.map((s) => <SelectItem key={s.id} value={s.id}>{s.full_name}</SelectItem>)}</SelectContent>
+          <SelectTrigger className="h-12 bg-background/50 border-white/10"><SelectValue placeholder="Pilih siswa..." /></SelectTrigger>
+          <SelectContent className="glass-card border-white/10 pointer-events-auto">{students.map((s) => <SelectItem key={s.id} value={s.id}>{s.full_name}</SelectItem>)}</SelectContent>
         </Select>
       </div>
 

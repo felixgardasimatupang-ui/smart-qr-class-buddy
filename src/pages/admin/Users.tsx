@@ -8,7 +8,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Pencil, Trash2, UserCog, UserPlus, Info } from "lucide-react";
+import { Pencil, Trash2, UserCog, UserPlus, Info, AlertTriangle } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface UserWithRole {
     id: string;
@@ -23,6 +33,7 @@ export default function AdminUsers() {
     const [open, setOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<{ id: string; email: string; role: string } | null>(null);
     const [newUserRole, setNewUserRole] = useState<"admin" | "student" | "parent">("student");
+    const [deleteId, setDeleteId] = useState<string | null>(null);
     const { toast } = useToast();
 
     const fetchUsers = async () => {
@@ -58,9 +69,13 @@ export default function AdminUsers() {
     };
 
     const handleDeleteUser = async (id: string) => {
-        if (!confirm("Cabut seluruh akses pengguna ini dalam sistem (hapus role)?")) return;
-        await supabase.from("user_roles").delete().eq("user_id", id);
-        toast({ title: "Akses Dicabut", description: "Role sistem pengguna berhasil dihilangkan. Hapus manual dari dashboard Supabase untuk kill email seutuhnya." });
+        const { error } = await supabase.from("user_roles").delete().eq("user_id", id);
+        if (error) {
+          toast({ title: "Error", description: error.message, variant: "destructive" });
+          return;
+        }
+        toast({ title: "Akses Dicabut", description: "Role sistem pengguna berhasil dihilangkan secara aman." });
+        setDeleteId(null);
         fetchUsers();
     };
 
@@ -75,7 +90,8 @@ export default function AdminUsers() {
     };
 
     return (
-        <div className="animate-in fade-in duration-500 pb-10">
+        <>
+            <div className="animate-in fade-in duration-500 pb-10">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
                 <div>
                     <h1 className="text-2xl font-bold flex items-center gap-2">
@@ -190,7 +206,12 @@ export default function AdminUsers() {
                                                     </div>
                                                 </DialogContent>
                                             </Dialog>
-                                            <Button variant="ghost" size="icon" className="hover:bg-destructive/20 hover:text-destructive rounded-full transition-colors" onClick={() => handleDeleteUser(user.id)}>
+                                            <Button 
+                                                variant="ghost" 
+                                                size="icon" 
+                                                className="hover:bg-destructive/20 hover:text-destructive rounded-full transition-colors" 
+                                                onClick={() => setDeleteId(user.id)}
+                                            >
                                                 <Trash2 className="h-4 w-4" />
                                             </Button>
                                         </TableCell>
@@ -202,16 +223,35 @@ export default function AdminUsers() {
                 </CardContent>
             </Card>
 
-            <div className="mt-8 p-4 glass-card border flex items-start gap-4">
-               <div className="w-10 h-10 shrink-0 bg-blue-500/20 text-blue-600 rounded-full flex items-center justify-center">
-                  <Info className="w-5 h-5" />
-               </div>
                 <div className="text-sm font-medium text-muted-foreground/90 leading-relaxed">
                     <p className="font-bold text-foreground mb-1 text-base">Panduan Autentikasi Pengguna</p>
                     Sebagai Admin, Anda dapat menambahkan pengguna baru ke ekosistem BimbelAbsen melalui menu pendaftaran luar.<br/>
-                    Supabase Auth menangani manajemen logaritma secara solid. Setelah pembuatan akun, Anda bisa kembali kesini untuk *binding* role menjadi siswa atau orang tua. 
+                    Supabase Auth menangani manajemen profil secara solid. Setelah akun dibuat, Anda bisa kembali kesini untuk *binding* role.
                 </div>
             </div>
-        </div>
+
+            <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
+                <AlertDialogContent className="glass-card border-0 sm:max-w-[400px]">
+                    <AlertDialogHeader>
+                        <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mb-2">
+                           <AlertTriangle className="h-6 w-6 text-destructive" />
+                        </div>
+                        <AlertDialogTitle className="text-xl">Cabut Akses Pengguna?</AlertDialogTitle>
+                        <AlertDialogDescription className="text-muted-foreground font-medium">
+                            Tindakan ini akan menghapus permanen role pengguna dalam sistem. Pengguna tidak akan bisa mengakses dashboard lagi.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="mt-4">
+                        <AlertDialogCancel className="rounded-full border-white/10">Batalkan</AlertDialogCancel>
+                        <AlertDialogAction 
+                            onClick={() => deleteId && handleDeleteUser(deleteId)}
+                            className="bg-destructive hover:bg-destructive/90 text-white rounded-full shadow-lg shadow-destructive/20 px-6"
+                        >
+                            Konfirmasi Hapus
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </>
     );
 }

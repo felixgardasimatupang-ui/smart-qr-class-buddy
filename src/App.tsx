@@ -4,30 +4,44 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { Suspense, lazy } from "react";
+import { Loader2 } from "lucide-react";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import AdminLayout from "@/components/layouts/AdminLayout";
-import MobileLayout from "@/components/layouts/MobileLayout";
-import Auth from "@/pages/Auth";
-import NotFound from "./pages/NotFound.tsx";
 
-import AdminDashboard from "@/pages/admin/Dashboard";
-import AdminUsers from "@/pages/admin/Users";
-import AdminStudents from "@/pages/admin/Students";
-import AdminClasses from "@/pages/admin/Classes";
-import AdminSessions from "@/pages/admin/Sessions";
-import AdminEvaluations from "@/pages/admin/Evaluations";
-import AdminReports from "@/pages/admin/Reports";
+// Lazy loading components
+const AdminLayout = lazy(() => import("@/components/layouts/AdminLayout"));
+const MobileLayout = lazy(() => import("@/components/layouts/MobileLayout"));
+const Auth = lazy(() => import("@/pages/Auth"));
+const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
-import StudentHome from "@/pages/student/Home";
-import StudentScan from "@/pages/student/Scan";
-import StudentHistory from "@/pages/student/History";
+// Admin pages
+const AdminDashboard = lazy(() => import("@/pages/admin/Dashboard"));
+const AdminUsers = lazy(() => import("@/pages/admin/Users"));
+const AdminStudents = lazy(() => import("@/pages/admin/Students"));
+const AdminClasses = lazy(() => import("@/pages/admin/Classes"));
+const AdminSessions = lazy(() => import("@/pages/admin/Sessions"));
+const AdminEvaluations = lazy(() => import("@/pages/admin/Evaluations"));
+const AdminReports = lazy(() => import("@/pages/admin/Reports"));
 
-import ParentDashboard from "@/pages/parent/Dashboard";
-import ParentRecap from "@/pages/parent/Recap";
-import ParentGrades from "@/pages/parent/Grades";
-import ProfilePage from "@/pages/Profile";
+// Student pages
+const StudentHome = lazy(() => import("@/pages/student/Home"));
+const StudentScan = lazy(() => import("@/pages/student/Scan"));
+const StudentHistory = lazy(() => import("@/pages/student/History"));
+
+// Parent pages
+const ParentDashboard = lazy(() => import("@/pages/parent/Dashboard"));
+const ParentRecap = lazy(() => import("@/pages/parent/Recap"));
+const ParentGrades = lazy(() => import("@/pages/parent/Grades"));
+const ProfilePage = lazy(() => import("@/pages/Profile"));
 
 const queryClient = new QueryClient();
+
+const LoadingScreen = () => (
+  <div className="min-h-screen w-full flex flex-col items-center justify-center bg-background gap-4">
+    <Loader2 className="w-10 h-10 text-primary animate-spin" />
+    <p className="text-sm font-medium text-muted-foreground animate-pulse">Memuat halaman...</p>
+  </div>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -36,37 +50,39 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Navigate to="/auth" replace />} />
-            <Route path="/auth" element={<Auth />} />
+          <Suspense fallback={<LoadingScreen />}>
+            <Routes>
+              <Route path="/" element={<Navigate to="/auth" replace />} />
+              <Route path="/auth" element={<Auth />} />
 
-            <Route path="/admin" element={<ProtectedRoute allowedRoles={["admin"]}><AdminLayout /></ProtectedRoute>}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="users" element={<AdminUsers />} />
-              <Route path="students" element={<AdminStudents />} />
-              <Route path="classes" element={<AdminClasses />} />
-              <Route path="sessions" element={<AdminSessions />} />
-              <Route path="evaluations" element={<AdminEvaluations />} />
-              <Route path="reports" element={<AdminReports />} />
-              <Route path="profile" element={<ProfilePage />} />
-            </Route>
+              <Route path="/admin" element={<ProtectedRoute allowedRoles={["admin"]}><AdminLayout /></ProtectedRoute>}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="users" element={<AdminUsers />} />
+                <Route path="students" element={<AdminStudents />} />
+                <Route path="classes" element={<AdminClasses />} />
+                <Route path="sessions" element={<AdminSessions />} />
+                <Route path="evaluations" element={<AdminEvaluations />} />
+                <Route path="reports" element={<AdminReports />} />
+                <Route path="profile" element={<ProfilePage />} />
+              </Route>
 
-            <Route path="/student" element={<ProtectedRoute allowedRoles={["student"]}><MobileLayout /></ProtectedRoute>}>
-              <Route index element={<StudentHome />} />
-              <Route path="scan" element={<StudentScan />} />
-              <Route path="history" element={<StudentHistory />} />
-              <Route path="profile" element={<ProfilePage />} />
-            </Route>
+              <Route path="/student" element={<ProtectedRoute allowedRoles={["student"]}><MobileLayout /></ProtectedRoute>}>
+                <Route index element={<StudentHome />} />
+                <Route path="scan" element={<StudentScan />} />
+                <Route path="history" element={<StudentHistory />} />
+                <Route path="profile" element={<ProfilePage />} />
+              </Route>
 
-            <Route path="/parent" element={<ProtectedRoute allowedRoles={["parent"]}><MobileLayout /></ProtectedRoute>}>
-              <Route index element={<ParentDashboard />} />
-              <Route path="recap" element={<ParentRecap />} />
-              <Route path="grades" element={<ParentGrades />} />
-              <Route path="profile" element={<ProfilePage />} />
-            </Route>
+              <Route path="/parent" element={<ProtectedRoute allowedRoles={["parent"]}><MobileLayout /></ProtectedRoute>}>
+                <Route index element={<ParentDashboard />} />
+                <Route path="recap" element={<ParentRecap />} />
+                <Route path="grades" element={<ParentGrades />} />
+                <Route path="profile" element={<ProfilePage />} />
+              </Route>
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
