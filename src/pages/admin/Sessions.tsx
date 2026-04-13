@@ -31,7 +31,7 @@ export default function AdminSessions() {
       supabase.from("sessions").select("*, classes(*)").order("date", { ascending: false }),
       supabase.from("classes").select("*"),
     ]);
-    if (sessionsRes.data) setSessions(sessionsRes.data as any);
+    if (sessionsRes.data) setSessions(sessionsRes.data as (Session & { classes?: Class })[]);
     if (classesRes.data) setClasses(classesRes.data);
   };
 
@@ -124,7 +124,7 @@ export default function AdminSessions() {
                 <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-8">Belum ada sesi</TableCell></TableRow>
               ) : sessions.map((s) => (
                 <TableRow key={s.id}>
-                  <TableCell className="font-medium">{(s as any).classes?.name || "-"}</TableCell>
+                  <TableCell className="font-medium">{s.classes?.name || "-"}</TableCell>
                   <TableCell>{s.date}</TableCell>
                   <TableCell>{s.start_time.slice(0,5)} - {s.end_time.slice(0,5)}</TableCell>
                   <TableCell>{statusBadge(s.status)}</TableCell>

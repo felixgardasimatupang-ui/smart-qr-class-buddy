@@ -12,9 +12,12 @@ import type { Tables } from "@/integrations/supabase/types";
 
 type Session = Tables<"sessions">;
 type Student = Tables<"students">;
+type Class = Tables<"classes">;
+
+type SessionWithClass = Session & { classes?: Class };
 
 export default function AdminEvaluations() {
-  const [sessions, setSessions] = useState<(Session & { classes?: any })[]>([]);
+  const [sessions, setSessions] = useState<SessionWithClass[]>([]);
   const [selectedSession, setSelectedSession] = useState("");
   const [students, setStudents] = useState<Student[]>([]);
   const [evaluations, setEvaluations] = useState<Record<string, { score: string; notes: string }>>({});
@@ -22,7 +25,7 @@ export default function AdminEvaluations() {
 
   useEffect(() => {
     supabase.from("sessions").select("*, classes(*)").order("date", { ascending: false })
-      .then(({ data }) => { if (data) setSessions(data as any); });
+      .then(({ data }) => { if (data) setSessions(data as SessionWithClass[]); });
   }, []);
 
   useEffect(() => {
@@ -31,7 +34,7 @@ export default function AdminEvaluations() {
       const session = sessions.find((s) => s.id === selectedSession);
       if (!session) return;
       const { data: cs } = await supabase.from("class_students").select("student_id, students(*)").eq("class_id", session.class_id);
-      const studs = (cs || []).map((c: any) => c.students).filter(Boolean);
+      const studs = (cs || []).map((c) => (c as { students?: Student }).students).filter(Boolean);
       setStudents(studs);
       const { data: evals } = await supabase.from("evaluations").select("*").eq("session_id", selectedSession);
       const map: Record<string, { score: string; notes: string }> = {};
@@ -66,7 +69,7 @@ export default function AdminEvaluations() {
           <SelectContent>
             {sessions.map((s) => (
               <SelectItem key={s.id} value={s.id}>
-                {(s as any).classes?.name} - {s.date}
+                {s.classes?.name} - {s.date}
               </SelectItem>
             ))}
           </SelectContent>

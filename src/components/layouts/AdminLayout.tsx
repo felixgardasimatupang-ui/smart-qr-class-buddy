@@ -5,6 +5,7 @@ import {
 } from "@/components/ui/sidebar";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
+import type { Tables } from "@/integrations/supabase/types";
 import { LayoutDashboard, Users, UserCog, BookOpen, CalendarCheck, ClipboardList, BarChart3, User, LogOut, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "react-router-dom";
@@ -89,7 +90,7 @@ function AdminSidebar() {
 
 export default function AdminLayout() {
   const { user } = useAuth();
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<Tables<"profiles"> | null>(null);
 
   useEffect(() => {
     if (user) {

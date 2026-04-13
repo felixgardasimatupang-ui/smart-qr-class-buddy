@@ -2,11 +2,15 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { Tables } from "@/integrations/supabase/types";
+
+type Student = Tables<"students">;
+type Evaluation = Tables<"evaluations">;
 
 export default function ParentGrades() {
   const { user } = useAuth();
-  const [children, setChildren] = useState<any[]>([]);
-  const [grades, setGrades] = useState<Record<string, any[]>>({});
+  const [children, setChildren] = useState<Student[]>([]);
+  const [grades, setGrades] = useState<Record<string, Evaluation[]>>({});
 
   useEffect(() => {
     if (!user) return;
@@ -14,7 +18,7 @@ export default function ParentGrades() {
       const { data: kids } = await supabase.from("students").select("*").eq("parent_user_id", user.id);
       setChildren(kids || []);
       if (kids) {
-        const map: Record<string, any[]> = {};
+        const map: Record<string, Evaluation[]> = {};
         for (const kid of kids) {
           const { data } = await supabase.from("evaluations").select("*, sessions(*, classes(*))").eq("student_id", kid.id).order("created_at", { ascending: false });
           map[kid.id] = data || [];

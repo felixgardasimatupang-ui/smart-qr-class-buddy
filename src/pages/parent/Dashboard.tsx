@@ -5,12 +5,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, CheckCircle, Activity, Sparkles, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import type { Tables } from "@/integrations/supabase/types";
+
+type Student = Tables<"students">;
+type Attendance = Tables<"attendance">;
+type Profile = Tables<"profiles">;
 
 export default function ParentDashboard() {
   const { user } = useAuth();
-  const [children, setChildren] = useState<any[]>([]);
-  const [todayAttendance, setTodayAttendance] = useState<any[]>([]);
-  const [profile, setProfile] = useState<any>(null);
+  const [children, setChildren] = useState<Student[]>([]);
+  const [todayAttendance, setTodayAttendance] = useState<Attendance[]>([]);
+  const [profile, setProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
     if (!user) return;

@@ -5,13 +5,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CalendarCheck, User, Clock, CheckCircle, Sparkles, BookOpen } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import type { Tables } from "@/integrations/supabase/types";
+
+type Session = Tables<"sessions">;
+type Attendance = Tables<"attendance">;
+type Student = Tables<"students">;
+type Profile = Tables<"profiles">;
 
 export default function StudentHome() {
   const { user } = useAuth();
-  const [activeSessions, setActiveSessions] = useState<any[]>([]);
-  const [todayAttendance, setTodayAttendance] = useState<any[]>([]);
-  const [studentInfo, setStudentInfo] = useState<any>(null);
-  const [profile, setProfile] = useState<any>(null);
+  const [activeSessions, setActiveSessions] = useState<Session[]>([]);
+  const [todayAttendance, setTodayAttendance] = useState<Attendance[]>([]);
+  const [studentInfo, setStudentInfo] = useState<Student | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
     if (!user) return;

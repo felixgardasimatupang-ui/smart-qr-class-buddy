@@ -4,11 +4,15 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { Tables } from "@/integrations/supabase/types";
+
+type Attendance = Tables<"attendance">;
+type Evaluation = Tables<"evaluations">;
 
 export default function StudentHistory() {
   const { user } = useAuth();
-  const [attendance, setAttendance] = useState<any[]>([]);
-  const [evaluations, setEvaluations] = useState<any[]>([]);
+  const [attendance, setAttendance] = useState<Attendance[]>([]);
+  const [evaluations, setEvaluations] = useState<Evaluation[]>([]);
 
   useEffect(() => {
     if (!user) return;

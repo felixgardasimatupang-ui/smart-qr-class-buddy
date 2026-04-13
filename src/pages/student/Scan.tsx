@@ -32,7 +32,7 @@ export default function StudentScan() {
         },
         () => {}
       );
-    } catch (err: any) {
+    } catch {
       toast({ title: "Error", description: "Tidak dapat mengakses kamera smartphone Anda", variant: "destructive" });
       setScanning(false);
     }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,9 +22,9 @@ export default function ProfilePage() {
     if (user) {
       fetchProfile();
     }
-  }, [user]);
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
     const { data, error } = await supabase
       .from("profiles")
       .select("*")
@@ -38,7 +38,7 @@ export default function ProfilePage() {
         avatar_url: data.avatar_url || "",
       });
     }
-  };
+  }, [user]);
 
   const handleSave = async () => {
     if (!user) return;

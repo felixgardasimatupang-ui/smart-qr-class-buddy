@@ -46,11 +46,12 @@ export default function Auth() {
         if (error) throw error;
         toast({ title: "Registrasi berhasil!", description: "Silakan cek email untuk verifikasi." });
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Auth error:", error);
+      const message = error instanceof Error ? error.message : "Terjadi kesalahan. Silakan coba lagi.";
       toast({
         title: "Error",
-        description: error.message || "Terjadi kesalahan. Silakan coba lagi.",
+        description: message,
         variant: "destructive"
       });
     } finally {

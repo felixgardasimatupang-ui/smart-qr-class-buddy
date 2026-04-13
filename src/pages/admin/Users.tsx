@@ -131,7 +131,7 @@ export default function AdminUsers() {
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="text-xs uppercase font-bold text-muted-foreground">Klasifikasi Baru</Label>
-                                    <Select value={newUserRole} onValueChange={(v) => setNewUserRole(v as any)}>
+                                    <Select value={newUserRole} onValueChange={(v: string) => setNewUserRole(v)}>
                                         <SelectTrigger className="h-12 bg-background/50 border-white/10"><SelectValue placeholder="Pilih role..." /></SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="admin">Administrator Sistem</SelectItem>

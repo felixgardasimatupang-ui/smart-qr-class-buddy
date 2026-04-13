@@ -8,12 +8,17 @@ import { Badge } from "@/components/ui/badge";
 
 import { Download, FileDown, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import type { Tables } from "@/integrations/supabase/types";
+
+type Student = Tables<"students">;
+type Attendance = Tables<"attendance">;
+type Evaluation = Tables<"evaluations">;
 
 export default function AdminReports() {
-  const [students, setStudents] = useState<any[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudent, setSelectedStudent] = useState("");
-  const [attendanceData, setAttendanceData] = useState<any[]>([]);
-  const [evalData, setEvalData] = useState<any[]>([]);
+  const [attendanceData, setAttendanceData] = useState<Attendance[]>([]);
+  const [evalData, setEvalData] = useState<Evaluation[]>([]);
   const [summary, setSummary] = useState({ hadir: 0, absen: 0, izin: 0, total: 0 });
 
   const handleExport = () => {

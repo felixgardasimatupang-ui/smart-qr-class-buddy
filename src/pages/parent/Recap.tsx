@@ -3,10 +3,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import type { Tables } from "@/integrations/supabase/types";
+
+type Student = Tables<"students">;
 
 export default function ParentRecap() {
   const { user } = useAuth();
-  const [children, setChildren] = useState<any[]>([]);
+  const [children, setChildren] = useState<Student[]>([]);
   const [recaps, setRecaps] = useState<Record<string, { hadir: number; absen: number; izin: number; total: number }>>({});
 
   useEffect(() => {
