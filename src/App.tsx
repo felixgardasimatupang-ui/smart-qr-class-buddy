@@ -55,6 +55,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Navigate to="/auth" replace />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/auth/callback" element={<Auth />} />
 
               <Route path="/admin" element={<ProtectedRoute allowedRoles={["admin"]}><AdminLayout /></ProtectedRoute>}>
                 <Route index element={<AdminDashboard />} />
